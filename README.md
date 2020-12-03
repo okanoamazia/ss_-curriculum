@@ -1,4 +1,4 @@
-# ss_-curriculum
+# ss_curriculum
 カリキュラムの提出用です。
 
 # Ruby編
