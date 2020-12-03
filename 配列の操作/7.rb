@@ -1,3 +1,4 @@
+#Rangeオブジェクトを使って配列を作る
 array1=("a".."z").to_a
 p array1
 

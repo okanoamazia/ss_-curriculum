@@ -1,3 +1,4 @@
+#文字列の連結
 f="Sato"
 l="Taro"
 puts f + l

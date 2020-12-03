@@ -1,3 +1,4 @@
+#文字列の連結
 str="朝、昼、晩"
 print str.split('、')
 

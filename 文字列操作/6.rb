@@ -1,3 +1,4 @@
+#文字列操作を組み合わせてみる
 str1="sato"
 str2="taro"
 str3=str1+str2

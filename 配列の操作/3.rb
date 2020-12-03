@@ -1,3 +1,4 @@
+#配列から要素を削除する
 ary=["tokyo", "saitama", "chiba", "kanagawa", "shizuoka"]
 ary.delete("chiba")
 p ary

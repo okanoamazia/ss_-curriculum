@@ -1,3 +1,4 @@
+#Fileの存在チェックと読み込み
 p File.exist?("1.rb")
 p File.exist?("ファイル操作と文字コード/5.rb")
 

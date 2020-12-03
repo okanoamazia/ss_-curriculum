@@ -1,3 +1,4 @@
+#整数
 num_a=2
 p num_a
 p num_a.to_f

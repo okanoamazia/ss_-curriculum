@@ -1,3 +1,4 @@
+#ループ処理(map、each、reduce)、loop、timesメソッド
 array = (1..4).to_a
 #for
 for num in array do

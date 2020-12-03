@@ -1,3 +1,4 @@
+#配列への要素の追加
 animals = ["cat", "dog"]
 animals.push("mouse") 
 animals << "nezumi"

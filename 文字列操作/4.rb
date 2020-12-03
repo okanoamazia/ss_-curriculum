@@ -1,3 +1,4 @@
+#文字列の置き換え
 str1="taro"
 puts str1.gsub("o", "a")
 puts str1

@@ -1,3 +1,4 @@
+#配列から要素を取り出す
 ary=["tokyo", "saitama", "chiba", "kanagawa", "shizuoka"]
 p ary[2]
 p ary[-2]
