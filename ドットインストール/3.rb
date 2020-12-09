@@ -1,9 +1,8 @@
-class Dog
-  def self.jump
-    puts "====================="
-    p self
-    p self.class
-    puts "====================="
-  end
+#特異メソッドの呼び出し
+animal = "cat"
+
+def animal.speak
+  puts "miaow"
 end
-Dog.jump
+
+animal.speak

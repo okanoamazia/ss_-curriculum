@@ -51,8 +51,7 @@ Manga.new.read
    　jumpメソッドがレシーバを検索
    →明示的なレシーバがDog
    →Dogオブジェクトがself（現在のオブジェクト）に設定される
-   →Dogオブジェクトのクラス（Classクラス）においてjumpメソッドを検索
-   →Classクラス内のDogクラス内でjumpメソッドを発見し実行
+   →Dogオブジェクトのクラス（＊特異クラス）においてjumpメソッドを検索し、発見し、実行
 =>細かいところを省略して考えると、クラス内でself.メソッド名とすれば、それがクラスメソッドとして使える（＝＞クラスに対してクラス内で定義したメソッドを呼び出しできる）
   #試しに、ここでselfを消すと undefined method `jump' for Dog:Class (NoMethodError)  となり、Dogクラス（Classクラスのオブジェクト）に対して呼び出したメソッドが実行できるものがないことになる
 class Dog
@@ -64,3 +63,25 @@ class Dog
   end
 end
 Dog.jump
+
+■　特異クラス・特異メソッド（Rubyプログラミング1.9の346P）
+・特異メソッド
+特定のオブジェクトに定義する固有のメソッド
+・特異クラス
+特異メソッド定義時に作成される無名クラスのこと
+
+例）
+animal = "cat"
+def animal.speak　　　# このanimal.speakが特異メソッド（animalオブジェクトに対する固有のメソッド）
+  puts "miaow"　　　　 #上で特異メソッドが定義された時に、animalオブジェクトのクラスに、特異クラス（無名クラス）が設定され、そこにspeakメソッドが定義される
+end　　　　　　　　　　
+animal.speak
+
+=begin
+呼び出される時の流れとしては、
+animal.speakが実行される
+speakメソッドの呼び出し元であるanimalのクラスにメソッドを探しに行く
+animalのクラスは特異クラスであり、そこにspeakが定義されている
+その結果、特異メソッドであるanimal.speakが実行される
+メソッドは処理の最後の値を返り値とするため、miaowが出力される
+=end
