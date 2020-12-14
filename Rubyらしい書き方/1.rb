@@ -1,4 +1,4 @@
-#第一章：数値、文字列
+#第1章：数値、文字列
 
 #例題１【数の比較】
 #整数インスタンスに変更（＊roundで四捨五入しているため誤差が生まれる可能性がある）
@@ -45,17 +45,17 @@ s="llllllll"
 raise "No numbers please" if s.match?(/\d/)
 
 # 例題７【文字列の切り出し１】
-p "PEN".split("")
-p "This is a pen.".split
-p "foo\nbar\nbaz\n".split("\n")
+p "PEN".split("") #＊区切り文字に""(ブランク)を指定すると、文字列を1文字ずつ分割
+p "This is a pen.".split  #デフォルトでは半角スペースがあれば分割可能
+p "foo\nbar\nbaz\n".split("\n") #指定した文字で区切る
 
 # 例題８【文字列の切り出し２】
 #文字列.scan(探索するパターン)  ＊探索するパターンには正規表現などが入る
 string = %{"Come, Watson! He cried."}
-p string.scan(/[\w']+/)
+p string.scan(/[\w']+/) #[\w']+で単語を示している
 
 # 例題９【文字列の切り出し３】
-p "03-5555-5555".split("-",2).first
+p "03-5555-5555".split("-",2).first  #オブジェクト.split("分割対象", 分割数)
 
 #例題１０【文字列の破壊的変更】
 strings = ["foo", "Bar", "BAZ"]
