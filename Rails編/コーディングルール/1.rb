@@ -81,5 +81,3 @@ Time.current # 上記と同じ処理で、より短い記法です。
 ・autotest→guard や watchr
 ・rcov→SimpleCov
 ・therubyracer→node.js
-
-■
