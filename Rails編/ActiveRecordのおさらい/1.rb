@@ -2,10 +2,36 @@
 #バリデーション
 #https://railsguides.jp/active_record_validations.html
 
+■　そもそもActiveRecordとは
+https://www.atmarkit.co.jp/ait/articles/1104/12/news135.html
+・Ruby on Railsを構成する最も重要なライブラリの1つ
+・MVCのモデル層に相当
+・O/Rマッピングを担当
+
+■　O/Rマッピング（ORM）
+・オブジェクト/リレーショナルマッピングの略
+・オブジェクトをリレーショナルデータベース(RDBMS)のテーブルに接続すること
+　これによって、SQL文を直接書く代りにわずかなアクセスコードを書くだけで、
+   アプリケーションのオブジェクトの属性やリレーションシップをデータベースに保存・取得できる
+
+■　Active Recordの主要な機能
+・モデルおよびモデル内のデータを表現する
+・モデル同士の関連付け(アソシエーション)を表現する
+・関連付けられているモデル間の継承階層を表現する
+・データをデータベースで永続化する前にバリデーション(検証)を行なう
+・データベースをオブジェクト指向スタイルで操作する
+
 ■　バリデーション
 正しいデータだけをデータベースに保存するために行う
 原則モデルに設定する
 Railsは、Active Recordオブジェクトを保存する直前にバリデーションを実行し、バリデーションで何らかのエラーが発生すると、オブジェクトを保存しません。
+
+■   バリデーションの書き方（＊ヘルパーはバリデーションヘルパー、すなわち presence: trueやuniqueness: true のこと）
+・1つのカラム
+validates :カラム名, ヘルパー
+
+・複数のカラム
+validates :カラム名, :カラム名, :カラム名, ヘルパー
 
 ■　バリデーションヘルパー
 任意の数の属性を受け付けることができるので、1行のコードを書くだけで多くの属性に対して同じバリデーションを実行できます
@@ -15,6 +41,57 @@ Railsは、Active Recordオブジェクトを保存する直前にバリデー�
   例）validates :email, uniqueness: true, on: :create
   (=> createなら作成時、これをupdateにすれば更新時のみバリデーションがかかる)
 :messageオプションバリデーション失敗時にerrorsコレクションに追加するメッセージを指定
+
+■　条件付きバリデーション
+・概要
+:ifオプションや:unlessオプションを使うことで特定の条件を満たす場合にのみバリデーションを実行可能（引数にはシンボル、ProcまたはArrayを使用）
+
+・例（シンボル）
+バリデーションの実行直前に呼び出されるメソッド名をシンボルで:ifや:unlessオプションに指定する
+class Order < ApplicationRecord
+  validates :card_number, presence: true, if: :paid_with_card?
+
+  def paid_with_card?
+    payment_type == "card"
+  end
+end
+→つまり「payment_type == "card"」の時のみ、「:card_number」に対して「 presence: true」を適用
+
+・例（Procオブジェクト）
+LambdaはProcの一種なので、Lambdaも可能
+validates :password, confirmation: true, unless: -> { password.blank? }
+
+＊解説
+-> { password.blank? }　は　Proc.new{ password.blank? }　と一緒。つまりProcクラスのオブジェクト。
+Procクラスのオブジェクトを引数とすることで、別途メソッドを定義せずともバリデーションに条件をつけることが可能
+（可能なのは、ActiveRecordの機能の1つだから）
+https://railsguides.jp/active_record_validations.html#if%E3%82%84-unless%E3%81%A7%E3%82%B7%E3%83%B3%E3%83%9C%E3%83%AB%E3%82%92%E4%BD%BF%E3%81%86
+
+
+■　カスタムバリデーションの作成方法（カスタムメソッド）
+・概要
+validate :メソッド名
+
+def メソッド名
+  検証したいコード
+end
+
+・例
+validate :check_name
+
+def check_name
+  if name == "管理人" 　　　→　この部分がバリデーションを設定するカラムとその条件になる（validates :name , presence: true的な部分）
+    errors.add(:name, "その名前は使用できません")
+  end
+end
+
+
+・URL
+https://railsguides.jp/active_record_validations.html#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B
+https://pikawaka.com/rails/validation
+https://qiita.com/h1kita/items/772b81a1cc066e67930e
+
+
 
 ■　Active Recordのオブジェクト
 2つの種類があります。オブジェクトがデータベースの行(row)に対応しているものと、そうでないものです。
