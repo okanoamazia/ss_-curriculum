@@ -161,3 +161,29 @@ class User
     puts "User Class"
   end
 end
+
+■   継承の書き方
+下記で親クラス(Super Class)のメソッドや変数を子クラス(Sub Class)が継承する
+class 子クラス < 親クラス
+
+end
+
+■   モジュール
+・概要
+処理をまとめたもの（＊クラスは処理とデータを1つにまとめたもの）
+・書き方
+module ModuleName  #1文字目は大文字
+  def  メソッド名
+  end
+end
+・使い方（名前空間）
+module Men 
+  def  student
+  end
+end
+
+def  student
+end
+
+とすることで、ModuleName::メソッド名(Men::student)のように名前空間をつくれる
+（同じstudentメソッドでもMenの場合とそれ以外の場合で動作を分けることが可能）
