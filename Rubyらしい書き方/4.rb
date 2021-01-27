@@ -9,13 +9,13 @@ array = Array.new(3){"foo"}
 
 例題30：置換文字列中でのマッチの引用
 ●回答
-"a b c".gsub(/\w/){"(#$&)"}
+"a b c".gsub(/\w/){"(#{$&})"}
 => "(a) (b) (c)"｀
 
 ●メモ
 ・gsubの引数にブロック
 String.gsub(pattern, replace)
-String.gsub(pattern){replace} 　replaceの部分が文字列なら{"hogehoge"}となる 
+String.gsub(pattern){replace} 　replaceの部分が文字列なら{"hogehoge"}となる
 ・正規表現
 \w	単語構成文字:[a-zA-Z_0-9]
 ・「$&」
@@ -27,4 +27,3 @@ $&の前のシャープは式展開における{}の省略した形(ローカル
 puts "hello #{@user}"　=> hello ken
 puts "hello #@user"　  => hello ken
 http://vector.hateblo.jp/entry/20111025/1319545096
-
