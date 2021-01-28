@@ -26,12 +26,48 @@ https://www.atmarkit.co.jp/ait/articles/1104/12/news135.html
 原則モデルに設定する
 Railsは、Active Recordオブジェクトを保存する直前にバリデーションを実行し、バリデーションで何らかのエラーが発生すると、オブジェクトを保存しません。
 
+■　バリデーションが自動でトリガされるメソッド
+create
+create!
+save
+save!
+update
+update!
+
+■　バリデーションを手動でトリガする方法
+・valid？メソッド
+・バリデーションを手動でトリガでき、オブジェクトにエラーがない場合はtrueが返され、そうでなければfalseが返されます。
+
+■　バリデーションでエラーが発生した場合
+・オブジェクトが保存されない
+・エラーメッセージに「.errors.messages」メソッドでアクセスできるようになる（このメソッドはエラーのコレクションを返す）
+例）
+class Article < ActiveRecord::Base
+  validates :title, uniqueness: true
+  validates :text, presence: true
+end
+a1 = Article.create(title:"rain", text:"snow")
+a2 = Article.create(title:"rain")
+a2.errors
+=> #<ActiveModel::Errors:0x00007f876823ba30 @base=#<Article id: nil, title: "rain", text: nil, created_at: nil, updated_at: nil>, @messages={:title=>["has already been taken"], :text=>["can't be blank"]}>
+a2.errors.messages
+=> {:title=>["has already been taken"], :text=>["can't be blank"]}
+a2.errors[:text]
+=> ["can't be blank"]
+a2.errors.messages[:text]
+=> ["can't be blank"]
+
 ■   バリデーションの書き方（＊ヘルパーはバリデーションヘルパー、すなわち presence: trueやuniqueness: true のこと）
 ・1つのカラム
 validates :カラム名, ヘルパー
 
 ・複数のカラム
 validates :カラム名, :カラム名, :カラム名, ヘルパー
+
+・バリデーションヘルパーにオプションを付ける場合
+https://udemy.benesse.co.jp/development/system/validates.html
+validates :カラム名, ヘルパー: { オプション: オプションの値 }
+例）validates :name, length: { maximum: 20 }
 
 ■　バリデーションヘルパー
 任意の数の属性を受け付けることができるので、1行のコードを書くだけで多くの属性に対して同じバリデーションを実行できます
@@ -41,6 +77,58 @@ validates :カラム名, :カラム名, :カラム名, ヘルパー
   例）validates :email, uniqueness: true, on: :create
   (=> createなら作成時、これをupdateにすれば更新時のみバリデーションがかかる)
 :messageオプションバリデーション失敗時にerrorsコレクションに追加するメッセージを指定
+
+
+■　共通のバリデーションオプション
+・:allow_blank
+本来、{:is: 5} のため5字ないと本来バリデーションに引っかかるが、nilだとしてもこのオプションによってバリデーションをパスできるようになる
+class Topic < ApplicationRecord
+  validates :title, length: { is: 5 }, allow_blank: true
+end
+Topic.create(title: nil).valid? # => true
+
+・:on
+デフォルトでは保存時（レコードの作成時および更新時の両方）に実行されるバリデーションをどちらかのみにできる
+class Person < ApplicationRecord
+  validates :name, uniqueness: true, on: :update
+end
+p1 = Person.new(name: "hoge")
+p2 = Person.new(name: "hoge")
+#=>これでもバリデーションにひっかからない
+
+＊カスタムコンテキスト
+・:on オプションにコンテキスト名を渡すことで作成可能
+・何もしないとバリデーションとしては機能しない（トリガーされない）
+・バリデーションとして機能させる（トリガー）には、トリガーさせたいメソッドの引数にコンテキスト名を渡す
+・明示的なトリガーによるモデルのバリデーションでは、そのコンテキストのみのバリデーションに加えて、コンテキストなしのバリデーションも実行される
+class Person < ApplicationRecord
+  validates :age, numericality: true, on: :account_setup
+  validates :name, presence: true
+end
+
+person = Person.new(age: 'thirty-three')
+person.valid?(:account_setup) # => false
+person.errors.messages
+ # => {:age=>["is not a number"], :name=>["can't be blank"]}
+
+■　:messge（エラーメッセージのカスタマイズ）　＊共通の バリデーションオプションの1つでもある
+・バリデーション失敗時にerrorsコレクションに追加されるカスタムエラーメッセージを指定できる
+・このオプションを使わない場合、Active Recordはバリデーションヘルパーごとにデフォルトのエラーメッセージとなる
+・:messageオプションはStringかProcを受け取る
+
+class Person < ApplicationRecord
+  # メッセージを直書きした場合
+  validates :name, presence: { message: "must be given please" }
+  # 動的な属性値を含むメッセージの場合。%{value}は実際の属性値に置き換えられる。%{attribute}や%{model}も利用可能。
+  validates :age, numericality: { message: "%{value} seems wrong" }
+end
+
+■　errors.add（エラーメッセージの追加）
+a2.errors.add(:text, "nodata")
+=> ["can't be blank", "nodata"]
+or
+a2.errors[:text] << "nodata"
+=> ["can't be blank", "nodata"]
 
 ■　条件付きバリデーション
 ・概要
@@ -68,7 +156,7 @@ Procクラスのオブジェクトを引数とすることで、別途メソッ�
 https://railsguides.jp/active_record_validations.html#if%E3%82%84-unless%E3%81%A7%E3%82%B7%E3%83%B3%E3%83%9C%E3%83%AB%E3%82%92%E4%BD%BF%E3%81%86
 
 
-■　カスタムバリデーションの作成方法（カスタムメソッド）
+■　カスタムバリデーションの作成方法①カスタムメソッド
 ・概要
 validate :メソッド名
 
@@ -92,6 +180,22 @@ https://pikawaka.com/rails/validation
 https://qiita.com/h1kita/items/772b81a1cc066e67930e
 
 
+■　カスタムバリデーションの作成方法②カスタムバリデータ
+１，app ディレクトリ内に validators というディレクトリを作成します
+２，そのファイルにhoge_validator.rbを作成
+３，ファイル内に下記を定義
+例）
+class HogeValidator < ActiveModel::Validator
+  def validate(record)
+    unless record.title.starts_with? 'X'
+      record.errors[:カラム名] << '名前はXで始まる必要があります'
+    end
+  end
+end
+４，使いたいモデルで呼び出し
+class Article < ActiveRecord::Base
+  validates_with HogeValidator
+end
 
 ■　Active Recordのオブジェクト
 2つの種類があります。オブジェクトがデータベースの行(row)に対応しているものと、そうでないものです。
@@ -147,13 +251,6 @@ $ bin/rails console
 => true
 >> p.new_record?
 => false
-
-■　valid？メソッド
-バリデーションを手動でトリガでき、オブジェクトにエラーがない場合はtrueが返され、そうでなければfalseが返されます。
-
-■　errors.messagesインスタンスメソッド
-Active Recordでバリデーションが行われた後、発生したエラーにアクセスできます。
-このメソッドはエラーのコレクションを返します。
 
 ■　errors[:attribute]
 特定のオブジェクトの属性が有効かどうかを確認できる
