@@ -92,8 +92,8 @@ Topic.create(title: nil).valid? # => true
 class Person < ApplicationRecord
   validates :name, uniqueness: true, on: :update
 end
-p1 = Person.new(name: "hoge")
-p2 = Person.new(name: "hoge")
+p1 = Person.create(name: "hoge")
+p2 = Person.create(name: "hoge")
 #=>これでもバリデーションにひっかからない
 
 ＊カスタムコンテキスト
@@ -157,7 +157,7 @@ https://railsguides.jp/active_record_validations.html#if%E3%82%84-unless%E3%81%A
 
 
 ■　カスタムバリデーションの作成方法①カスタムメソッド
-・概要
+・概要（＊普通のバリデーションが validates であるが、カスタムバリデーションを作る場合は validate なので注意）
 validate :メソッド名
 
 def メソッド名
@@ -184,7 +184,7 @@ https://qiita.com/h1kita/items/772b81a1cc066e67930e
 １，app ディレクトリ内に validators というディレクトリを作成します
 ２，そのファイルにhoge_validator.rbを作成
 ３，ファイル内に下記を定義
-例）
+例）（このときのrecordはバリデーションをかけるモデルのオブジェクトを指し、record.titleの部分でカラムを指定している）
 class HogeValidator < ActiveModel::Validator
   def validate(record)
     unless record.title.starts_with? 'X'
@@ -196,6 +196,25 @@ end
 class Article < ActiveRecord::Base
   validates_with HogeValidator
 end
+
+例）
+class ArticleValidator < ActiveModel::Validator
+  def validate(record)
+    unless record.title.starts_with? 'X'
+      record.errors[:title] << '名前はXで始まる必要があります'
+    end
+  end
+end
+
+class Article < ActiveRecord::Base
+  validates_with ArticleValidator
+end
+
+a1 = Article.new(title:"sunny", text:"XXX")
+a1.valid?
+=> falise
+a1.errors.message
+=> {:title=>["名前はXで始まる必要があります"]}
 
 ■　Active Recordのオブジェクト
 2つの種類があります。オブジェクトがデータベースの行(row)に対応しているものと、そうでないものです。

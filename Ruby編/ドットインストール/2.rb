@@ -1,7 +1,7 @@
 #selfのより細かい理解
 https://docs.ruby-lang.org/ja/latest/class/main.html
 https://www.atmarkit.co.jp/ait/articles/1501/06/news028_2.html
-■ self 
+■ self
 ・Rubyリファレンスマニュアル
 現在のコンテキストにおいて、暗黙のレシーバーとなるオブジェクト。
 また、そのオブジェクトを指す擬似変数の名前。
@@ -30,7 +30,7 @@ p self.class     #=> object                                                main�
 class Manga
   p self           #=> Manga                                               selfが読み取る現在のオブジェクトは、ClassクラスのオブジェクトであるMangaクラス
   p self.class   #=> Class                                                 MangaクラスのクラスはClass（＊全てのクラスはClassクラスのオブジェクトであるという概念を前提とした話）
- 
+
   def read
     p self          #=> #<Manga:0x00007f84fb0d5ef8>       Mangaクラスのインスタンス
     p self.class  #=> Manga                                              MangaクラスのインスタンスのクラスだからManga
