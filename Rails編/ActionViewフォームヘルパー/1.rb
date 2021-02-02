@@ -10,7 +10,7 @@ https://railstutorial.jp/chapters/toy_app?version=4.2#sec-mvc_in_action
 ＊ERB
 https://shinkufencer.hateblo.jp/entry/2018/12/27/000000
 https://railsguides.jp/action_view_overview.html
-https://railsdoc.com/page/er
+https://railsdoc.com/page/erb
 ・HTMLなどの文章の中にRubyスクリプトを埋め込むためのライブラリ
 ・ファイル拡張子が.erbであれば使える
 ・<% %>タグはその中に書かれたRubyコードを実行しますが、実行結果は出力されない
@@ -65,6 +65,12 @@ Webページ　　　　で　　Taro　
                                                 #<Article id: 6, title: "XX", text: "hogehoge", created_at: "2021-02-01 07:08:17", updated_at: "2021-02-01 07:08:17">]>
       （これを配列のように見立てて、<> のかたまりを要素と呼んでいる模様）
       （調べると、ActiveRecord で呼ばれるこういったデータは ActiveRecord::Relation というクラスのインスタンスであるらしいので、配列と同様に扱えるようにできているのかもしれない）
+        ↓
+        MotoakiEguchi 4 hours ago
+            @okanoamazia
+            今の時点では、collectionには配列を渡すと理解しておいた方が良いです。
+            要素の分だけ、というのは配列の中にある要素の数だけ、という意味で良いです。
+
 ③レイアウト
   ・多くのコントローラのアクションにわたって共通して使用できるテンプレートのこと
   ・特に指定をしていない場合は「app/views/layouts/application.html.erb」というファイルがレイアウト用テンプレートして自動的に使用される
