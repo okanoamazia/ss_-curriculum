@@ -108,7 +108,34 @@ Model.where("login = ? AND password = ?", entered_user_name, entered_password).f
 ・悪意のある入力をホワイトリストでフィルタする（例 sanitize()メソッド）
 ・Web アプリケーションの出力をエスケープする
 
+＊Web アプリケーションの出力をエスケープすることがXSS対策になることの解説
+https://qiita.com/toduq/items/b88716bad35865ef2dc9
+XSS の具体的な手口
+ユーザ入力がただの文字列ではなくて、HTML のタグや Javascript として認識されてしまうこと
+↓
+対策
+ユーザ入力の中にJavascriptのscriptタグ等が入っていてもそれをタグとして認識しなければよい
+↓
+結果
+https://www.javadrive.jp/rails/template/index7.html
+Rails3 以降では <%= ～ % を使って出力を行う場合に自動的にエスケープ処理が行われる
 
+＊エスケープ処理とは
+「<」「>」「&」等をただの文字に変換する
+例）
+< を &lt;
+> を &gt;
+& を &amp;
+
+＊エスケープ処理を故意に停止（回避）する方法
+https://techracho.bpsinc.jp/hachi8833/2016_08_31/25326
+https://railsdoc.com/view#raw
+https://www.javadrive.jp/rails/template/index7.html
+<%= 文字列.html_safe %
+<%= raw(文字列) %
+<%== 〜 %
+
+＊閉じタグ ＞ は書くとvscode上 文字の色が代わりかなり見にくくなるので故意に書いていないです
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 セッション、cookie について
 【Web 全般における概念の話】
