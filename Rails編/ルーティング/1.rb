@@ -2,6 +2,7 @@
 #https://railsguides.jp/routing.html
 
 ■ルーターの役割
+
 ・受け取ったHTTPリクエストを認識し、適切なコントローラ内アクションに割り当てる
 例）
 root 'welcome#index' （root  to: 'welcome#index' の省略、getは書かない決まりだが、HTTPリクエスト のメソッドとしてはget。3.14に記載あり）
@@ -119,6 +120,7 @@ resources :photos do
 end
 
 
+
 ■ルーティングの「concern」機能
 ・concernを使うことで、他のリソースやルーティング内で使いまわせる共通のルーティングを宣言できます。concernは以下のように定義します。
 例）
@@ -141,3 +143,4 @@ get 'exit', to: 'sessions#destroy', as: :logout
 
 ■ルーティングの調査
 ・rake routes | grep hoge で hoge が含まれるルーティングを検索可能
+
