@@ -101,7 +101,9 @@ resources :magazines do
   resources :ads
 end
 
+
 ■RESTful なルーティングに新たなアクションを追加
+
 ①member （/photos/id/preview のようにidを必要とする場合）
 resources :photos do
   member do
@@ -115,6 +117,7 @@ resources :photos do
     get 'search'
   end
 end
+
 
 ■ルーティングの「concern」機能
 ・concernを使うことで、他のリソースやルーティング内で使いまわせる共通のルーティングを宣言できます。concernは以下のように定義します。
